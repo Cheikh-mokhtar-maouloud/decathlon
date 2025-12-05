@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Choisissez votre exercice personnalisé">
+    <title>Choisir un Exercice | L'analyse posturale</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="results.css">
+</head>
+
+<body>
+    <div class="background-effects">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+        <div class="gradient-orb orb-3"></div>
+    </div>
+
+    <nav class="top-nav">
+        <a href="qcm.html" class="back-btn">← Retour au QCM</a>
+    </nav>
+
+    <main class="results-container">
+        <header class="results-header">
+            <div class="page-icon">🏋️‍♂️</div>
+            <h1 class="results-title">Choisir un Exercice</h1>
+            <p class="results-subtitle">Sélectionnez un exercice pour voir les détails et conseils</p>
+        </header>
+
+        <section class="result-section search-section">
+            <div class="section-header">
+                <div class="section-icon exercises">🔍</div>
+                <div>
+                    <h2 class="section-title">Exercices Disponibles</h2>
+                    <p class="section-subtitle">Cliquez sur un exercice pour le sélectionner</p>
+                </div>
+            </div>
+
+            <div class="search-container">
+                <input type="text" id="exerciseSearch" class="search-input" placeholder="Rechercher un exercice...">
+                <span class="search-icon">🔍</span>
+            </div>
+
+            <div class="exercise-grid" id="exerciseList"></div>
+
+            <div class="selected-exercise-confirm" id="selectedConfirm" style="display: none;">
+                <div class="confirm-content">
+                    <img id="confirmImage" src="" alt="" class="confirm-img">
+                    <div class="confirm-text">
+                        <span class="confirm-label">Exercice sélectionné :</span>
+                        <span class="confirm-name" id="confirmName">--</span>
+                    </div>
+                </div>
+                <button class="confirm-btn" onclick="goToResults()">Voir les détails complets →</button>
+            </div>
+        </section>
+
+        <section class="instructions-section">
+            <div class="instruction-card">
+                <span class="instruction-number">1</span>
+                <p>Parcourez les exercices disponibles</p>
+            </div>
+            <div class="instruction-card">
+                <span class="instruction-number">2</span>
+                <p>Cliquez sur "Choisir cet exercice"</p>
+            </div>
+            <div class="instruction-card">
+                <span class="instruction-number">3</span>
+                <p>Accédez aux instructions détaillées</p>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <p>© 2024 L'analyse posturale</p>
+        </footer>
+    </main>
+
+    <script>
+        let exercices = [];
+        let selectedExercise = null;
+
+        // Charger les exercices depuis le JSON
+        fetch('exercices.json')
+            .then(res => res.json())
+            .then(data => {
+                exercices = data;
+                displayExercises(exercices);
+            })
+            .catch(err => {
+                console.error('Erreur chargement JSON:', err);
+                document.getElementById('exerciseList').innerHTML = '<p class="no-results">Erreur de chargement des exercices</p>';
+            });
+
+        // Recherche
+        document.getElementById('exerciseSearch').addEventListener('input', function (e) {
+            const query = e.target.value.toLowerCase().trim();
+            const filtered = query ? exercices.filter(ex =>
+                ex.exercice.toLowerCase().includes(query) ||
+                ex.reference.toLowerCase().includes(query)
+            ) : exercices;
+            displayExercises(filtered);
+        });
+
+        function displayExercises(list) {
+            const container = document.getElementById('exerciseList');
+            if (!list.length) {
+                container.innerHTML = '<p class="no-results">Aucun exercice trouvé</p>';
+                return;
+            }
+            container.innerHTML = list.map(ex => `
+                <div class="exercise-card-img ${selectedExercise?.id === ex.id ? 'selected' : ''}" data-id="${ex.id}">
+                    <div class="exercise-card-image">
+                        <img src="${ex.image}" alt="${ex.exercice}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="exercise-placeholder" style="display: none;">🏋️</div>
+                    </div>
+                    <div class="exercise-card-body">
+                        <h3 class="exercise-card-title">${ex.exercice}</h3>
+                        <p class="exercise-card-desc">${ex.reference}</p>
+                        <button class="choose-btn" onclick="selectExercise('${ex.id}')">
+                            ${selectedExercise?.id === ex.id ? '✓ Sélectionné' : 'Choisir cet exercice'}
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function selectExercise(id) {
+            selectedExercise = exercices.find(ex => ex.id === id);
+            if (!selectedExercise) return;
+
+            sessionStorage.setItem('selectedExercise', JSON.stringify(selectedExercise));
+
+            // Update MessageRequest with selected exercise (keeps other data)
+            updateMessageRequestExercise(selectedExercise.exercice);
+
+            document.getElementById('selectedConfirm').style.display = 'block';
+            document.getElementById('confirmName').textContent = selectedExercise.exercice;
+            document.getElementById('confirmImage').src = selectedExercise.image;
+
+            displayExercises(exercices.filter(ex => {
+                const query = document.getElementById('exerciseSearch').value.toLowerCase().trim();
+                if (!query) return true;
+                return ex.exercice.toLowerCase().includes(query) || ex.reference.toLowerCase().includes(query);
+            }));
+
+            document.getElementById('selectedConfirm').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        // Update MessageRequest with selected exercise (keeps all other data)
+        function updateMessageRequestExercise(exerciseName) {
+            try {
+                let messageRequest = JSON.parse(sessionStorage.getItem('messageRequest') || '{}');
+                console.log('📦 Current MessageRequest:', messageRequest);
+                messageRequest.selectedExercise = exerciseName;
+                sessionStorage.setItem('messageRequest', JSON.stringify(messageRequest));
+                console.log('✅ MessageRequest updated with exercise:', exerciseName);
+                console.log('📦 Current MessageRequest:', messageRequest);
+            } catch (e) {
+                console.error('Error updating MessageRequest:', e);
+            }
+        }
+
+        function goToResults() {
+            if (selectedExercise) {
+                window.location.href = 'final-results.html';
+            }
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Détails de votre exercice et assistant">
+    <title>Votre Exercice | L'analyse posturale</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="results.css">
+    <style>
+        .page4-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--spacing-lg);
+        }
+
+        .page4-header {
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .page4-title {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary-blue), var(--accent-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .exercise-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, rgba(74, 174, 217, 0.1), rgba(107, 203, 119, 0.1));
+            border: 2px solid var(--primary-blue);
+            padding: 10px 24px;
+            border-radius: var(--radius-full);
+            font-weight: 600;
+            color: var(--primary-blue);
+            font-size: 1.1rem;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-xl);
+            align-items: start;
+        }
+
+        .exercise-section {
+            background: var(--bg-card);
+            border: 2px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+
+        .exercise-header {
+            background: linear-gradient(135deg, var(--primary-blue), #3b9fd1);
+            color: white;
+            padding: var(--spacing-md);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .exercise-header-left {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .exercise-header-icon {
+            font-size: 1.5rem;
+        }
+
+        .exercise-header h2 {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .video-nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: var(--radius-full);
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .video-nav-btn:hover {
+            background: white;
+            color: var(--primary-blue);
+            transform: scale(1.05);
+        }
+
+        .exercise-image-container {
+            background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 350px;
+            padding: var(--spacing-lg);
+            position: relative;
+        }
+
+        .exercise-image-container img {
+            max-width: 100%;
+            max-height: 320px;
+            object-fit: contain;
+            border-radius: var(--radius-md);
+        }
+
+        .exercise-placeholder {
+            font-size: 8rem;
+            opacity: 0.3;
+        }
+
+        #processedCanvas {
+            max-width: 100%;
+            max-height: 320px;
+            display: none;
+        }
+
+        .score-overlay {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 12px 20px;
+            border-radius: var(--radius-md);
+            font-weight: 700;
+            font-size: 1.2rem;
+            display: none;
+        }
+
+        .score-value {
+            color: #4ade80;
+            font-size: 1.5rem;
+        }
+
+        .ws-status {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85rem;
+            padding: 6px 12px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: var(--radius-full);
+            color: white;
+            display: none;
+        }
+
+        .ws-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #fbbf24;
+        }
+
+        .ws-dot.connected {
+            background: #4ade80;
+        }
+
+        .exercise-info {
+            padding: var(--spacing-lg);
+        }
+
+        .exercise-name {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .exercise-desc {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .chat-section {
+            background: var(--bg-card);
+            border: 2px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 550px;
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            color: white;
+            padding: var(--spacing-md);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .chat-header-icon {
+            font-size: 1.5rem;
+        }
+
+        .chat-header h2 {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: var(--spacing-md);
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
+            background: var(--bg-secondary);
+        }
+
+        .chat-message {
+            display: flex;
+            gap: var(--spacing-sm);
+            max-width: 90%;
+            animation: messageIn 0.3s ease;
+        }
+
+        @keyframes messageIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .chat-message.user {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+
+        .chat-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .chat-message.bot .chat-avatar {
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+        }
+
+        .chat-message.user .chat-avatar {
+            background: linear-gradient(135deg, var(--primary-blue), var(--accent-green));
+        }
+
+        .chat-bubble {
+            background: white;
+            padding: 12px 16px;
+            border-radius: 16px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: var(--text-primary);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .chat-message.user .chat-bubble {
+            background: linear-gradient(135deg, var(--primary-blue), #3b9fd1);
+            color: white;
+        }
+
+        .chat-input-container {
+            display: flex;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-md);
+            background: white;
+            border-top: 2px solid var(--border-light);
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 14px 18px;
+            border: 2px solid var(--border-light);
+            border-radius: var(--radius-full);
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: #9b59b6;
+        }
+
+        .chat-send-btn {
+            padding: 14px 24px;
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            color: white;
+            border: none;
+            border-radius: var(--radius-full);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .chat-send-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .page4-nav {
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-xl);
+        }
+
+        @media (max-width: 900px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .chat-section {
+                height: 450px;
+            }
+
+            .exercise-header {
+                flex-direction: column;
+                gap: var(--spacing-sm);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Funny Popup -->
+    <div class="popup-overlay" id="funnyPopup">
+        <div class="popup-content">
+            <img src="popup-image.png" alt="Funny" class="popup-image">
+            <h2 class="popup-title">Imagine devoir payer… alors qu'on soutient déjà le site NIRD : 100% gratuit, zéro
+                Euro 😅💸🚀</h2>
+            <button class="popup-btn" onclick="closePopup()">C'est parti ! 💪</button>
+        </div>
+    </div>
+
+    <div class="background-effects">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+        <div class="gradient-orb orb-3"></div>
+    </div>
+
+    <nav class="top-nav">
+        <a href="results.html" class="back-btn">🔙 Retour aux exercices</a>
+    </nav>
+
+    <main class="page4-container">
+        <header class="page4-header">
+            <h1 class="page4-title">Votre Exercice</h1>
+            <div class="exercise-badge" id="exerciseBadge">
+                <span>🏋️</span>
+                <span id="exerciseNameBadge">Chargement...</span>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <section class="exercise-section">
+                <div class="exercise-header">
+                    <div class="exercise-header-left">
+                        <span class="exercise-header-icon">📸</span>
+                        <h2>Exercice Sélectionné</h2>
+                    </div>
+                    <button class="video-nav-btn" id="videoBtn" onclick="toggleCamera()">
+                        <span>📹</span>
+                        <span id="videoBtnText">Enregistrer une vidéo</span>
+                    </button>
+                </div>
+
+                <div class="exercise-image-container">
+                    <img id="exerciseImage" src="" alt="Exercice" style="display: none;">
+                    <canvas id="processedCanvas"></canvas>
+                    <video id="videoElement" style="display:none;" autoplay muted playsinline></video>
+                    <span class="exercise-placeholder" id="exercisePlaceholder">🏋️</span>
+
+                    <div class="score-overlay" id="scoreOverlay">
+                        Score: <span class="score-value" id="scoreValue">0</span>%
+                    </div>
+
+                    <div class="ws-status" id="wsStatus">
+                        <div class="ws-dot" id="wsDot"></div>
+                        <span id="wsText">Déconnecté</span>
+                    </div>
+                </div>
+
+                <div class="exercise-info">
+                    <h3 class="exercise-name" id="exerciseName">Chargement...</h3>
+                    <p class="exercise-desc" id="exerciseDesc">--</p>
+                </div>
+            </section>
+
+            <section class="chat-section">
+                <div class="chat-header">
+                    <span class="chat-header-icon">🤖</span>
+                    <h2>Assistant Posture</h2>
+                </div>
+
+                <div class="chat-messages" id="chatMessages"></div>
+
+                <div class="chat-input-container">
+                    <input type="text" id="chatInput" class="chat-input" placeholder="Écris ta question...">
+                    <button class="chat-send-btn" onclick="sendMessage()">Envoyer 📤</button>
+                </div>
+            </section>
+        </div>
+
+        <nav class="page4-nav">
+            <a href="results.html" class="nav-btn secondary">← Choisir un autre exercice</a>
+            <a href="index.html" class="nav-btn primary">🏠 Retour à l'accueil</a>
+        </nav>
+    </main>
+
+    <script>
+        // Popup logic
+        window.addEventListener('load', () => {
+            const popupShown = sessionStorage.getItem('popupShown');
+            if (!popupShown) {
+                setTimeout(() => {
+                    document.getElementById('funnyPopup').classList.add('show');
+                }, 500);
+            }
+        });
+
+        function closePopup() {
+            sessionStorage.setItem('popupShown', 'true');
+            document.getElementById('funnyPopup').classList.remove('show');
+            setTimeout(() => {
+                document.getElementById('funnyPopup').classList.add('hidden');
+            }, 300);
+        }
+
+        // Exercise data
+        const selectedExercise = JSON.parse(sessionStorage.getItem('selectedExercise'));
+
+        if (selectedExercise) {
+            document.getElementById('exerciseNameBadge').textContent = selectedExercise.exercice;
+            document.getElementById('exerciseName').textContent = selectedExercise.exercice;
+            document.getElementById('exerciseDesc').textContent = selectedExercise.reference;
+
+            const img = document.getElementById('exerciseImage');
+            const placeholder = document.getElementById('exercisePlaceholder');
+
+            if (selectedExercise.image) {
+                img.src = selectedExercise.image;
+                img.onload = () => {
+                    img.style.display = 'block';
+                    placeholder.style.display = 'none';
+                };
+                img.onerror = () => {
+                    img.style.display = 'none';
+                    placeholder.style.display = 'block';
+                };
+            }
+
+            initializeChat();
+        } else {
+            document.getElementById('exerciseNameBadge').textContent = 'Aucun exercice';
+            document.getElementById('exerciseName').textContent = 'Aucun exercice sélectionné';
+            document.getElementById('exerciseDesc').textContent = 'Retournez à la page précédente pour choisir un exercice.';
+            addMessage("Salut ! 👋 Je suis ton assistant posture. Retourne à la page précédente pour choisir un exercice, et je t'expliquerai comment le faire !", 'bot');
+        }
+
+        // WebSocket and Camera variables
+        let ws = null;
+        let stream = null;
+        let videoElement = document.getElementById('videoElement');
+        let canvas = document.getElementById('processedCanvas');
+        let ctx = canvas.getContext('2d');
+        let sendInterval = null;
+        let isRunning = false;
+        const WS_URL = 'ws://localhost:8000/ws';
+
+        function toggleCamera() {
+            if (!isRunning) {
+                startCamera();
+            } else {
+                stopCamera();
+            }
+        }
+
+        async function startCamera() {
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: 'user', width: 640, height: 480 },
+                    audio: false
+                });
+
+                videoElement.srcObject = stream;
+                await videoElement.play();
+
+                canvas.width = videoElement.videoWidth;
+                canvas.height = videoElement.videoHeight;
+
+                // Hide image, show canvas
+                document.getElementById('exerciseImage').style.display = 'none';
+                document.getElementById('exercisePlaceholder').style.display = 'none';
+                canvas.style.display = 'block';
+                document.getElementById('scoreOverlay').style.display = 'block';
+                document.getElementById('wsStatus').style.display = 'flex';
+
+                // Update button
+                document.getElementById('videoBtnText').textContent = 'Arrêter la caméra';
+                document.getElementById('videoBtn').style.background = 'rgba(239, 68, 68, 0.3)';
+
+                // Connect WebSocket
+                connectWebSocket();
+                isRunning = true;
+
+            } catch (err) {
+                alert('Impossible d\'accéder à la caméra. Vérifiez les permissions.');
+                console.error(err);
+            }
+        }
+
+        function stopCamera() {
+            isRunning = false;
+
+            if (sendInterval) {
+                clearInterval(sendInterval);
+                sendInterval = null;
+            }
+
+            if (ws) {
+                ws.close();
+                ws = null;
+            }
+
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+                stream = null;
+            }
+
+            // Show image again
+            canvas.style.display = 'none';
+            document.getElementById('scoreOverlay').style.display = 'none';
+            document.getElementById('wsStatus').style.display = 'none';
+
+            if (selectedExercise && selectedExercise.image) {
+                document.getElementById('exerciseImage').style.display = 'block';
+            } else {
+                document.getElementById('exercisePlaceholder').style.display = 'block';
+            }
+
+            // Update button
+            document.getElementById('videoBtnText').textContent = 'Enregistrer une vidéo';
+            document.getElementById('videoBtn').style.background = 'rgba(255,255,255,0.2)';
+            updateWSStatus(false);
+        }
+
+        function connectWebSocket() {
+            updateWSStatus(false, 'Connexion...');
+
+            ws = new WebSocket(WS_URL);
+
+            ws.onopen = () => {
+                console.log('✅ WebSocket connected');
+                updateWSStatus(true);
+                startSendingFrames();
+            };
+
+            ws.onmessage = (event) => {
+                try {
+                    const data = JSON.parse(event.data);
+
+                    if (data.image) {
+                        const img = new Image();
+                        img.onload = () => {
+                            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                        };
+                        img.src = data.image;
+                    }
+
+                    if (data.score !== undefined) {
+                        document.getElementById('scoreValue').textContent = data.score;
+                    }
+
+                    if (data.feedback && data.feedback.length) {
+                        data.feedback.forEach(fb => addMessage(fb, 'bot'));
+                    }
+
+                } catch (e) {
+                    console.error('Error parsing message:', e);
+                }
+            };
+
+            ws.onerror = (error) => {
+                console.error('WebSocket error:', error);
+                updateWSStatus(false, 'Erreur');
+            };
+
+            ws.onclose = () => {
+                console.log('WebSocket closed');
+                updateWSStatus(false);
+                if (isRunning) {
+                    setTimeout(() => {
+                        if (isRunning) connectWebSocket();
+                    }, 2000);
+                }
+            };
+        }
+
+        function startSendingFrames() {
+            sendInterval = setInterval(() => {
+                if (ws && ws.readyState === WebSocket.OPEN && videoElement.readyState === videoElement.HAVE_ENOUGH_DATA) {
+                    const tempCanvas = document.createElement('canvas');
+                    tempCanvas.width = videoElement.videoWidth;
+                    tempCanvas.height = videoElement.videoHeight;
+                    const tempCtx = tempCanvas.getContext('2d');
+                    tempCtx.drawImage(videoElement, 0, 0);
+
+                    const base64 = tempCanvas.toDataURL('image/jpeg', 0.8).split(',')[1];
+                    ws.send(base64);
+                }
+            }, 100);
+        }
+
+        function updateWSStatus(connected, text = null) {
+            const dot = document.getElementById('wsDot');
+            const statusText = document.getElementById('wsText');
+
+            if (connected) {
+                dot.classList.add('connected');
+                statusText.textContent = text || 'Connecté';
+            } else {
+                dot.classList.remove('connected');
+                statusText.textContent = text || 'Déconnecté';
+            }
+        }
+
+        // Chat functions
+        function initializeChat() {
+            addMessage(`Salut ! 👋 Tu as choisi l'exercice **${selectedExercise.exercice}** ! Excellent choix !`, 'bot');
+
+            setTimeout(() => {
+                let stepsMessage = `📋 **Voici comment faire :**\n\n`;
+                if (selectedExercise.steps && selectedExercise.steps.length) {
+                    selectedExercise.steps.forEach((step, index) => {
+                        stepsMessage += `${index + 1}. ${step}\n`;
+                    });
+                } else {
+                    stepsMessage += "Suis les instructions générales de l'exercice.";
+                }
+                addMessage(stepsMessage, 'bot');
+            }, 800);
+
+            setTimeout(() => {
+                addMessage("Tu as des questions sur cet exercice ? 🤔 N'hésite pas à me demander !", 'bot');
+            }, 1600);
+        }
+
+        const chatResponses = {
+            'répétitions': 'Pour cet exercice, je recommande 3 séries de 10-15 répétitions. Débutant ? Commence par 2x8 ! 💪',
+            'répétition': 'Fais 3 séries de 10-15 reps. Adapte selon ton niveau ! 📊',
+            'combien': 'En général, 3 séries de 10-15 répétitions sont idéales.',
+            'dos': 'Oui ! Cet exercice renforce les muscles stabilisateurs et améliore ta posture. 🦴',
+            'erreurs': 'Erreurs à éviter :\n• Dos courbé\n• Mouvements trop rapides\n• Respiration bloquée ⚠️',
+            'erreur': 'Attention à garder le dos droit et ne pas aller trop vite ! ⚠️',
+            'fréquence': 'Pratique 2-3 fois par semaine avec un jour de repos entre les séances. 📅',
+            'fois': 'Tu peux faire cet exercice 2-3 fois par semaine. 🔄',
+            'douleur': 'Si tu as mal, arrête ! Consulte un pro si ça persiste. 🏥',
+            'mal': 'Si tu as mal, arrête l\'exercice ! 🛑',
+            'échauffement': 'Toujours 5-10 min d\'échauffement avant ! 🔥',
+            'respiration': 'Expire pendant l\'effort, inspire pendant le relâchement. 💨',
+            'bonjour': 'Salut ! 👋 Comment puis-je t\'aider avec ton exercice ?',
+            'salut': 'Hey ! 😊 Tu as une question sur ton exercice ?',
+            'merci': 'Avec plaisir ! Bon entraînement ! 💪🎉',
+            'aide': 'Je peux t\'aider sur :\n• Répétitions\n• Erreurs à éviter\n• Fréquence\n• Respiration 🤓',
+            'video': 'Clique sur le bouton "Enregistrer une vidéo" pour te filmer ! 📹',
+            'comment': `Voici les étapes :\n${selectedExercise?.steps?.map((s, i) => `${i + 1}. ${s}`).join('\n') || 'Suis les instructions de l\'exercice.'}`,
+            'étapes': `Les étapes :\n${selectedExercise?.steps?.map((s, i) => `${i + 1}. ${s}`).join('\n') || 'Suis les instructions.'}`,
+            'expliquer': `Bien sûr ! Voici comment faire :\n${selectedExercise?.steps?.map((s, i) => `${i + 1}. ${s}`).join('\n') || 'Suis les instructions.'}`,
+            'oui': 'Super ! Pose-moi ta question, je suis là pour t\'aider ! 😊',
+            'non': 'Pas de problème ! Si tu as des questions plus tard, je suis là. Bon entraînement ! 💪',
+            'question': 'Oui, bien sûr ! Que veux-tu savoir sur l\'exercice ? 🤔'
+        };
+
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            if (!message) return;
+
+            addMessage(message, 'user');
+            input.value = '';
+
+            setTimeout(() => {
+                const response = generateResponse(message);
+                addMessage(response, 'bot');
+            }, 500);
+        }
+
+        function addMessage(text, type) {
+            const container = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `chat-message ${type}`;
+
+            let formattedText = text
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\n/g, '<br>');
+
+            messageDiv.innerHTML = `
+                <div class="chat-avatar">${type === 'user' ? '👤' : '🤖'}</div>
+                <div class="chat-bubble">${formattedText}</div>
+            `;
+            container.appendChild(messageDiv);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function generateResponse(message) {
+            const lowerMsg = message.toLowerCase();
+            for (const [keyword, response] of Object.entries(chatResponses)) {
+                if (lowerMsg.includes(keyword)) return response;
+            }
+            return "Bonne question ! 🤔 Demande-moi sur les répétitions, erreurs, fréquence ou comment faire l'exercice !";
+        }
+
+        document.getElementById('chatInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', () => {
+            if (isRunning) stopCamera();
+        });
+    </script>
+</body>
+
+</html>

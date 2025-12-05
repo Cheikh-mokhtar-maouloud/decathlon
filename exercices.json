@@ -1,0 +1,96 @@
+[
+    {
+        "id": "squat",
+        "exercice": "Squat",
+        "image": "images/Squat.png",
+        "reference": "Renforce les cuisses, les fessiers et le bas du dos. Excellent pour améliorer la posture et la stabilité.",
+        "steps": [
+            "Place-toi debout, pieds écartés à largeur d'épaules",
+            "Tends les bras devant toi pour l'équilibre",
+            "Fléchis les genoux en poussant les fesses vers l'arrière",
+            "Descends jusqu'à ce que tes cuisses soient parallèles au sol",
+            "Garde le dos droit et les abdos contractés",
+            "Remonte en poussant sur les talons",
+            "Répète 12 à 15 fois"
+        ]
+    },
+    {
+        "id": "bird-dog",
+        "exercice": "Bird-Dog",
+        "image": "images/dog big.png",
+        "reference": "Exercice complet de stabilité du tronc. Idéal pour renforcer le bas du dos, les abdominaux et améliorer l'équilibre.",
+        "steps": [
+            "Mets-toi à quatre pattes, mains sous les épaules",
+            "Contracte les abdominaux pour stabiliser le tronc",
+            "Tends le bras droit devant toi",
+            "En même temps, tends la jambe gauche derrière",
+            "Maintiens la position 3 secondes",
+            "Reviens à la position initiale",
+            "Alterne avec le bras gauche et la jambe droite",
+            "Répète 10 fois de chaque côté"
+        ]
+    },
+    {
+        "id": "hip-thrust",
+        "exercice": "Hip Thrust",
+        "image": "images/Hip thrust men version.png",
+        "reference": "Renforce intensément les fessiers et soutient le bas du dos. Recommandé pour corriger la posture assise prolongée.",
+        "steps": [
+            "Assieds-toi au sol, dos contre un banc ou canapé",
+            "Plie les genoux, pieds à plat au sol",
+            "Place les épaules sur le bord du support",
+            "Pousse sur les talons pour lever les hanches",
+            "Monte jusqu'à aligner cuisses et torse",
+            "Contracte fortement les fessiers en haut",
+            "Redescends lentement",
+            "Répète 15 fois"
+        ]
+    },
+    {
+        "id": "plank-shoulder-taps",
+        "exercice": "Plank Shoulder Taps",
+        "image": "images/Plank shoulder taps.png",
+        "reference": "Variation dynamique du gainage. Améliore la stabilité, le contrôle du tronc et renforce les épaules.",
+        "steps": [
+            "Place-toi en position de planche haute (bras tendus)",
+            "Mains sous les épaules, corps aligné",
+            "Contracte les abdos pour éviter les balancements",
+            "Touche ton épaule gauche avec ta main droite",
+            "Repose la main et alterne",
+            "Garde les hanches stables pendant le mouvement",
+            "Répète 20 fois (10 de chaque côté)"
+        ]
+    },
+    {
+        "id": "plank",
+        "exercice": "Plank",
+        "image": "images/plank-Photoroom.png",
+        "reference": "Renforce tout le tronc (abdos, lombaires) et aide à stabiliser la colonne vertébrale.",
+        "steps": [
+            "Allonge-toi face au sol",
+            "Appuie-toi sur les avant-bras et les pointes de pieds",
+            "Aligne ton corps de la tête aux talons",
+            "Contracte les abdominaux",
+            "Garde les fessiers serrés",
+            "Ne laisse pas les hanches monter ou descendre",
+            "Maintiens la position 30 secondes à 1 minute",
+            "Respire normalement pendant l'exercice"
+        ]
+    },
+    {
+        "id": "side-plank",
+        "exercice": "Side Plank",
+        "image": "images/side plank.png",
+        "reference": "Gainage latéral puissant permettant de renforcer les obliques et d'améliorer l'équilibre du bassin.",
+        "steps": [
+            "Allonge-toi sur le côté droit",
+            "Appuie-toi sur ton avant-bras droit",
+            "Le coude doit être sous l'épaule",
+            "Soulève les hanches du sol",
+            "Aligne ton corps en ligne droite",
+            "Bras gauche tendu vers le plafond ou sur la hanche",
+            "Maintiens 20-30 secondes",
+            "Change de côté et répète"
+        ]
+    }
+]

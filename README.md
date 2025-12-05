@@ -1,158 +1,107 @@
-# 🏋️‍♂️ Antigravity | Web App d’Évaluation Sportive & Posturale
+# 🏋️‍♂️ Antigravity | Web App d’Évaluation Sportive & Posturale + RAG Architecture
 
 ## Table of Contents
 - [Overview](#overview)
+- [Screenshots](#screenshots)
+- [RAG Chatbot System Architecture](#rag-chatbot-system-architecture)
 - [Key Features](#key-features)
 - [System Architecture](#system-architecture)
-- [Screenshots / Demo](#screenshots--demo)
 - [Technologies](#technologies)
 - [Getting Started](#getting-started)
 - [Project Structure](#project-structure)
 - [License](#license)
-- [My Links](#my-links)
+- [Author](#author)
 
 ---
 
 ## 📌 Overview
 
-**Antigravity** est une application web interactive qui évalue le **profil sportif et postural** d’un utilisateur à travers un QCM simple, puis lui propose :
+**Antigravity** est une application web interactive permettant :
 
-- un exercice adapté selon ses besoins,  
-- des instructions détaillées pour l’exécuter correctement,  
-- des conseils personnalisés pour améliorer sa posture et éviter les blessures,  
-- une petite zone Chat pour poser des questions.
+✔ d’évaluer la posture et les habitudes sportives via un questionnaire (QCM),  
+✔ de choisir un exercice parmi des illustrations professionnelles,  
+✔ d’obtenir une fiche complète de l’exercice sélectionné,  
+✔ d’avoir des instructions détaillées étape par étape,  
+✔ d’utiliser un mini-chat posture pour recevoir de l’aide,  
+✔ et d'intégrer un module **RAG (Retrieval-Augmented Generation)** pour les questions avancées.
 
-Le tout fonctionne **sans backend**, grâce au **HTML, CSS, JavaScript** et un fichier **JSON dynamique** contenant les exercices.
+Le projet est 100% **HTML / CSS / JavaScript + JSON**, sans backend.
 
-Antigravity vise à rendre l’éducation sportive plus **simple, visuelle et accessible**.
+---
+
+## 🖼️ Screenshots
+
+### 🔹 Page 1 — Informations utilisateur
+![Page1](/mnt/data/Capture%20d'écran%202025-12-05%20062317.png)
+
+### 🔹 Page 2 — Questionnaire sport & posture
+![Page2](/mnt/data/Capture%20d'écran%202025-12-05%20062330.png)
+
+### 🔹 Page 3 — Choisir un exercice
+![Page3](/mnt/data/Capture%20d'écran%202025-12-05%20062343.png)
+
+### 🔹 Page 4 — Exercice sélectionné + Assistant Posture
+![Page4](/mnt/data/Capture%20d'écran%202025-12-05%20062356.png)
+
+---
+
+## 🧠 RAG Chatbot System Architecture
+
+Le schéma suivant montre l’architecture complète du système RAG utilisé dans le projet, incluant :
+
+- ingestion de documents PDF/DOCX,
+- chunking et transformation du texte,
+- génération d’embeddings,
+- indexation vectorielle,
+- retrieval,
+- LLM (Gemma 2B),
+- conversation memory,
+- gestion du chat utilisateur.
+
+![RAG Architecture](/mnt/data/RAG%20Chatbot%20System%20Architecture.png)
 
 ---
 
 ## ⭐ Key Features
 
-### 🎯 QCM Sport & Posture
-Évaluation rapide du niveau sportif, posture, douleurs potentielles.
+### 🎯 1. QCM Sport & Posture  
+Analyse du niveau sportif, des douleurs potentielles et de la posture.
 
-### 🔍 Recherche d’un Exercice
-Page dédiée où l’utilisateur recherche et choisit **un seul exercice** parmi une liste dynamique.
+### 🔍 2. Recherche d’un Exercice  
+Page dédiée permettant de rechercher et sélectionner un exercice illustré.
 
-### 🏋️ Fiche Exercice Détaillée
-Après la sélection, une page dédiée affiche :
+### 🏋️ 3. Fiche Exercice Détaillée  
+Affiche :  
+- image de l’exercice,  
+- description complète,  
+- étapes d’exécution,  
+- recommandations posturales.
 
-- l’image de l’exercice,  
-- une description précise,  
-- les étapes pour bien l’exécuter,  
-- des conseils métiers (posture, respiration, technique).
+### 🤖 4. Assistant Posture (Mini-Chat)  
+Répond aux questions basiques sur l’exercice sélectionné.
 
-### 💬 Mini Chat d’Assistance
-Un petit assistant en JavaScript répond aux questions de base.
+### 🧠 5. RAG Chatbot (Optionnel – Avancé)  
+Permet :  
+- Q/A basées sur des documents PDF/DOCX,  
+- récupération de contexte via embeddings,  
+- réponses générées par un LLM avec contexte ajouté.
 
-### 📱 Design Responsive
-Compatible mobile, tablette et desktop.
+### 📱 6. Design Responsive  
+Compatible mobile, tablette et ordinateur.
 
-### 📁 Gestion via JSON
-Tous les exercices (nom, image, steps, références) sont chargés depuis **exercices.json**.
+### 📁 7. JSON Data Pipeline  
+Tous les exercices (nom, image, steps…) proviennent de **exercices.json**.
 
 ---
 
-## 🏗️ System Architecture
+## 🏗️ System Architecture (Frontend App)
 
 ```text
 HTML / CSS / JavaScript
            │
-           │
-       JSON File
-(Exercices + Images + Steps)
-           │
+       exercices.json
            │
      LocalStorage API
-(Stockage temporaire des choix)
-```
-
-### 🔸 Pages de l’application
-- **Page 1 :** Accueil + informations utilisateur  
-- **Page 2 :** QCM Sport & Posture  
-- **Page 3 :** Recherche & choix d’un exercice  
-- **Page 4 :** Résultats + Conseils + Instructions de l’exercice choisi  
-
-Aucun backend n'est nécessaire.
-
----
-
-## 🎥 Screenshots / Demo
-
-*(À compléter plus tard : captures d’écran ou lien vers une vidéo de démonstration.)*
-
----
-
-## 🛠️ Technologies
-
-- **HTML5**
-- **CSS3**
-- **JavaScript (Vanilla JS)**
-- **JSON**
-- **LocalStorage**
-- **Illustrations SVG/PNG**
-
----
-
-## 🚀 Getting Started
-
-### 1. Cloner le dépôt
-
-```bash
-git clone https://github.com/cheikhmokhtar/antigravity
-cd antigravity
-```
-
-### 2. Lancer l’application
-
-Ouvre simplement le fichier suivant dans ton navigateur :
-
-```text
-page1.html
-```
-
-Aucune installation ni serveur n’est nécessaire.
-
----
-
-## 📂 Project Structure
-
-```text
-/images
-    squat.png
-    dog.png
-    hipthrust.png
-    plank.png
-    sideplank.png
-    ...
-/css
-    style.css
-/js
-    app.js
-    qcm.js
-    exercice.js
-    result.js
-exercices.json
-page1.html
-page2.html
-page3.html
-page4.html
-README.md
-```
-
----
-
-## 📜 License
-
-Ce projet est sous licence **MIT**.  
-Tu peux le modifier, l’utiliser et le redistribuer librement.
-
----
-
-## 🔗 My Links
-
-[![Facebook](https://img.shields.io/badge/Facebook-1877F2?style=for-the-badge&logo=facebook&logoColor=white)](https://www.facebook.com/habib.sidiahmed.5)  
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/sidi-ahmed-habib-18163220a/)  
-[![GitHub](https://img.shields.io/badge/GitHub-000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/)
+           │
+Pages dynamiques :
+Page 1 → Page 2 → Page 3 → Page 4

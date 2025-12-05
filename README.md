@@ -32,16 +32,21 @@ Le projet est 100% **HTML / CSS / JavaScript + JSON**, sans backend.
 ## 🖼️ Screenshots
 
 ### 🔹 Page 1 — Informations utilisateur
-![Page1](/mnt/data/Capture%20d'écran%202025-12-05%20062317.png)
+![Page1](images/page1.png)
 
 ### 🔹 Page 2 — Questionnaire sport & posture
-![Page2](/mnt/data/Capture%20d'écran%202025-12-05%20062330.png)
+![Page2](images/page2.png)
 
 ### 🔹 Page 3 — Choisir un exercice
-![Page3](/mnt/data/Capture%20d'écran%202025-12-05%20062343.png)
+![Page3](images/page3.png)
 
 ### 🔹 Page 4 — Exercice sélectionné + Assistant Posture
-![Page4](/mnt/data/Capture%20d'écran%202025-12-05%20062356.png)
+![Page4](images/page4.png)
+---
+
+## 🧠 RAG Chatbot System Architecture
+![RAG Architecture](images/rag-architecture.png)
+
 
 ---
 
